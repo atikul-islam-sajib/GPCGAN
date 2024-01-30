@@ -100,7 +100,7 @@ This script initializes the data loader, downloads the MNIST dataset, and prepar
 
 ## Documentation
 
-For detailed documentation on the implementation and usage, visit the [GPCGAN Documentation](https://atikul-islam-sajib.github.io/GPDSG-deploy/).
+For detailed documentation on the implementation and usage, visit the [GPCGAN Documentation](https://atikul-islam-sajib.github.io/GPCGAN-deploy/).
 
 ## Notebook Training
 
