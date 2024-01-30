@@ -17,7 +17,7 @@ setup(
     keywords="Alzheimer classification machine-learning",
     project_urls={
         "Bug Tracker": "https://github.com/atikul-islam-sajib/GPCGAN.git/issues",
-        "Documentation": "https://github.com/atikul-islam-sajib/GPCGAN.git/blob/main/README.md",
+        "Documentation": "https://atikul-islam-sajib.github.io/GPCGAN-deploy/",
         "Source Code": "https://github.com/atikul-islam-sajib/GPCGAN.git",
     },
 )
