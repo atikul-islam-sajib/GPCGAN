@@ -19,7 +19,8 @@ GPCGAN (GAN-based Project for Synthesizing Grayscale images) is a machine learni
 Clone the repository:
 
 ```
-https://github.com/atikul-islam-sajib/GPCGAN.git
+git clone https://github.com/atikul-islam-sajib/GPCGAN.git
+
 cd GPCGAN
 ```
 
