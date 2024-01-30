@@ -61,7 +61,7 @@ class Test:
                 model_checkpoints
                 + "/"
                 + "generator_"
-                + str(len(os.listdir(model_checkpoints)))
+                + str(len(os.listdir(model_checkpoints)) - 1)
                 + ".pth"
             )
         except Exception as e:
