@@ -155,6 +155,8 @@ if __name__ == "__main__":
         test = Test(num_samples=args.samples, latent_space=args.latent_space)
         test.plot_synthetic_image()
 
+        logging.info("Completed and generated the image dataset".capitalize())
+
         logging.info("Synthetic data generated successfully".capitalize())
     else:
         logging.exception(
