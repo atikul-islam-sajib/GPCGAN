@@ -10,6 +10,7 @@ GPCGAN (GAN-based Project for Synthesizing Grayscale images) is a machine learni
 
 - Utilizes PyTorch for implementing GAN models.
 - Provides scripts for easy training and generating synthetic images.
+- Command Line Interface for easy interaction.
 - Includes a custom data loader for the MNIST dataset.
 - Customizable training parameters for experimenting with GAN.
 
