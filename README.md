@@ -46,31 +46,7 @@ python /path/to/GPCGAN/src/cli.py --help
 - `--samples SAMPLES`: Determine the number of samples to generate after training.
 - `--test`: Run tests with synthetic data to validate model performance.
 
-## Core Script Usage
-
-The core script sets up the necessary components for training the GAN. Here's a quick overview of what each part does:
-
-```python
-from src.data_loader import Loader
-from src.train import Trainer
-from src.test import Test
-
-# Initialize the data loader with batch size
-loader = Loader(batch_size = 64)
-loader.create_loader(mnist_data = loader.download_mnist())
-
-# Set up the trainer with learning rate, epochs, and latent space size
-trainer = Trainer(latent_space = 100, epochs = 10, lr = 0.0002)
-trainer.train_CGAN()
-
-# Test the generated dataset and display the synthetic images
-test = Test(num_samples = 20,latent_space = 100)
-test.plot_synthetic_image()
-```
-
-This script initializes the data loader, downloads the MNIST dataset, and prepares the data loader. It then sets up and starts the training process for the GAN model.
-
-## Training and Generating Images
+## Training and Generating Images(CLI)
 
 ### Training the GAN Model
 
@@ -96,6 +72,30 @@ Check the specified output directory for the generated images.
 from IPython.display import Image
 Image(filename='/content/GPCGAN/outputs/generated_image.png')
 ```
+
+## Core Script Usage
+
+The core script sets up the necessary components for training the GAN. Here's a quick overview of what each part does:
+
+```python
+from src.data_loader import Loader
+from src.train import Trainer
+from src.test import Test
+
+# Initialize the data loader with batch size
+loader = Loader(batch_size = 64)
+loader.create_loader(mnist_data = loader.download_mnist())
+
+# Set up the trainer with learning rate, epochs, and latent space size
+trainer = Trainer(latent_space = 100, epochs = 10, lr = 0.0002)
+trainer.train_CGAN()
+
+# Test the generated dataset and display the synthetic images
+test = Test(num_samples = 20,latent_space = 100)
+test.plot_synthetic_image()
+```
+
+This script initializes the data loader, downloads the MNIST dataset, and prepares the data loader. It then sets up and starts the training process for the GAN model.
 
 ## Documentation
 
