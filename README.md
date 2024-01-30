@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-Explain how to use the software. Provide examples of commands and their explanations.
+Examples of commands and their explanations.
 
 ```bash
 python /path/to/GPCGAN/src/cli.py --help
