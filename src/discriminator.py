@@ -79,7 +79,7 @@ class Discriminator(nn.Module):
                     in_features=in_features, out_features=out_features
                 )
                 layers["{}_activation".format(index + 1)] = nn.LeakyReLU(
-                    negative_slope=negative_slope
+                    negative_slope=negative_slope, inplace=True
                 )
                 layers["{}_dropout".format(index + 1)] = nn.Dropout(p=dropout)
 

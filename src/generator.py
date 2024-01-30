@@ -77,7 +77,7 @@ class Generator(nn.Module):
                     in_features=in_features, out_features=out_features
                 )
                 layers["{}_activation".format(index)] = nn.LeakyReLU(
-                    negative_slope=negative_slope
+                    negative_slope=negative_slope, inplace=True
                 )
 
             (in_features, out_features) = layers_config[-1]
