@@ -9,46 +9,34 @@ from discriminator import Discriminator
 from trainer import Trainer
 from test import Test
 
-"""
-# Main CLI for GAN Operations
-
-This script serves as the main command-line interface (CLI) for various operations related to Generative Adversarial Networks (GANs). It integrates functionalities such as data loading, model training, and synthetic data generation.
-
-## Features:
-- Argument parsing for flexible configuration of operations like data loading, training, and synthetic image generation.
-- Facilitates downloading and loading of MNIST dataset.
-- Initiates the training of GAN models.
-- Generates synthetic images using a trained generator.
-
-## Usage:
-Run the script from the command line with the desired arguments. For example:
-    python main_cli.py --download_mnist --batch_size 32 --epochs 100 --latent_space 100 --lr 0.0002 --samples 20
-    
-Run the script from the command line for synthetic with the desired arguments. For example:
-    python main_cli.py --samples 20 --latent_space 100 --test
-    
-    
-## Arguments:
-- `--batch_size`: Batch size for the DataLoader.
-- `--download_mnist`: Flag to download the MNIST dataset.
-- `--epochs`: Number of epochs for training.
-- `--latent_space`: Dimension of the latent space for the generator.
-- `--lr`: Learning rate for the optimizer.
-- `--samples`: Number of synthetic samples to generate.
-"""
-
 
 def cli():
     """
-    The main command-line interface (CLI) function for handling user input and coordinating the data loading, training, and synthetic image generation processes.
+    # Main CLI for GAN Operations
 
-    ### Process:
-    - Parses command-line arguments.
-    - Based on the arguments, it either downloads and processes the MNIST dataset and/or trains the GAN models.
-    - Generates synthetic images if specified in the arguments.
+    This script serves as the main command-line interface (CLI) for various operations related to Generative Adversarial Networks (GANs). It integrates functionalities such as data loading, model training, and synthetic data generation.
 
-    ### Raises:
-    - Exception: If the provided arguments do not meet the required conditions for the operations.
+    ## Features:
+    - Argument parsing for flexible configuration of operations like data loading, training, and synthetic image generation.
+    - Facilitates downloading and loading of MNIST dataset.
+    - Initiates the training of GAN models.
+    - Generates synthetic images using a trained generator.
+
+    ## Usage:
+    Run the script from the command line with the desired arguments. For example:
+        - `python main_cli.py --download_mnist --batch_size 32 --epochs 100 --latent_space 100 --lr 0.0002 --samples 20`
+
+    Run the script from the command line for synthetic with the desired arguments. For example:
+       - `python main_cli.py --samples 20 --latent_space 100 --test`
+
+
+    ## Arguments:
+    - `--batch_size`: Batch size for the DataLoader.
+    - `--download_mnist`: Flag to download the MNIST dataset.
+    - `--epochs`: Number of epochs for training.
+    - `--latent_space`: Dimension of the latent space for the generator.
+    - `--lr`: Learning rate for the optimizer.
+    - `--samples`: Number of synthetic samples to generate.
     """
     parser = argparse.ArgumentParser(description="Command line coding".title())
     parser.add_argument(

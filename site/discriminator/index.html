@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Discriminator - Conditional GAN</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Discriminator";
+        var mkdocs_page_input_path = "discriminator.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Conditional GAN
+        </a>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_loader/">DataLoader</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Discriminator</a>
+    <ul class="current">
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../generator/">Generator</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../trainer/">Trainer</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../test/">Test</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../cli/">Command Line</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Conditional GAN</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Discriminator</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="discriminator"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="discriminator.Discriminator" class="doc doc-heading">
+          <code>Discriminator</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+          <p class="doc doc-class-bases">
+            Bases: <code><span title="torch.Module">Module</span></code></p>
+
+  
+      <p>A discriminator class for a Generative Adversarial Network (GAN), particularly used for
+image data with an added conditional label embedding. The discriminator's goal is to
+differentiate between real and fake images. It utilizes fully connected layers,
+LeakyReLU activation for hidden layers, and a Sigmoid activation for the output layer.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Attributes:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>num_labels</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>Number of unique labels for the conditional GAN. For instance,
+              in a dataset with 10 different classes, num_labels should be 10.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>labels</code></b>
+                  (<code><span title="torch.Embedding">Embedding</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Embedding layer for the labels, which allows the discriminator
+                   to condition the input on a particular class.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>layers_config</code></b>
+                  (<code>list</code>)
+              –
+              <div class="doc-md-description">
+                <p>A list defining the architecture of the neural network. Each
+                  element in the list is a tuple, with the first two elements
+                  being the number of input and output features for a layer,
+                  and the optional third being the negative slope for LeakyReLU.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>model</code></b>
+                  (<code><span title="torch.Sequential">Sequential</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The actual neural network model, constructed based on layers_config.
+                  It comprises fully connected (Linear) layers, LeakyReLU activation
+                  for non-linearity in hidden layers, and a Sigmoid activation function
+                  in the output layer to obtain probabilities.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+  <p><strong>Methods:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+          <tr>
+            <td><code><span title="discriminator.Discriminator.connected_layer">connected_layer</span></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>Constructs the neural network layers based on layers_config. It initializes the fully
+connected layers and the activation functions, specifically using LeakyReLU for hidden
+layers and Sigmoid for the output layer.</p>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><code><span title="discriminator.Discriminator.forward">forward</span></code></td>
+            <td>
+              <div class="doc-md-description">
+                <p>Performs a forward pass of the discriminator. It takes an input batch of images <code>x</code>
+and their corresponding labels, processes the images and labels through the network,
+and outputs a batch of probabilities indicating how likely each image is to be real.</p>
+              </div>
+            </td>
+          </tr>
+    </tbody>
+  </table>
+
+<details class="note" open>
+  <summary>Note</summary>
+  <ul>
+<li>The model expects inputs x to be of the shape (N, 784) where N is the batch size.</li>
+<li>Labels should be of shape (N,) and contain integers representing class labels.</li>
+<li>The output is of shape (N, 1), representing the likelihood of each image being real.</li>
+<li>The network architecture is designed to work with flattened images of size 28x28 pixels.</li>
+</ul>
+</details>
+            <details class="quote">
+              <summary>Source code in <code>discriminator.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 18</span>
+<span class="normal"> 19</span>
+<span class="normal"> 20</span>
+<span class="normal"> 21</span>
+<span class="normal"> 22</span>
+<span class="normal"> 23</span>
+<span class="normal"> 24</span>
+<span class="normal"> 25</span>
+<span class="normal"> 26</span>
+<span class="normal"> 27</span>
+<span class="normal"> 28</span>
+<span class="normal"> 29</span>
+<span class="normal"> 30</span>
+<span class="normal"> 31</span>
+<span class="normal"> 32</span>
+<span class="normal"> 33</span>
+<span class="normal"> 34</span>
+<span class="normal"> 35</span>
+<span class="normal"> 36</span>
+<span class="normal"> 37</span>
+<span class="normal"> 38</span>
+<span class="normal"> 39</span>
+<span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Discriminator</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A discriminator class for a Generative Adversarial Network (GAN), particularly used for</span>
+<span class="sd">    image data with an added conditional label embedding. The discriminator&#39;s goal is to</span>
+<span class="sd">    differentiate between real and fake images. It utilizes fully connected layers,</span>
+<span class="sd">    LeakyReLU activation for hidden layers, and a Sigmoid activation for the output layer.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        num_labels (int): Number of unique labels for the conditional GAN. For instance,</span>
+<span class="sd">                          in a dataset with 10 different classes, num_labels should be 10.</span>
+<span class="sd">        labels (nn.Embedding): Embedding layer for the labels, which allows the discriminator</span>
+<span class="sd">                               to condition the input on a particular class.</span>
+<span class="sd">        layers_config (list): A list defining the architecture of the neural network. Each</span>
+<span class="sd">                              element in the list is a tuple, with the first two elements</span>
+<span class="sd">                              being the number of input and output features for a layer,</span>
+<span class="sd">                              and the optional third being the negative slope for LeakyReLU.</span>
+<span class="sd">        model (nn.Sequential): The actual neural network model, constructed based on layers_config.</span>
+<span class="sd">                              It comprises fully connected (Linear) layers, LeakyReLU activation</span>
+<span class="sd">                              for non-linearity in hidden layers, and a Sigmoid activation function</span>
+<span class="sd">                              in the output layer to obtain probabilities.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        connected_layer(layers_config=None):</span>
+<span class="sd">            Constructs the neural network layers based on layers_config. It initializes the fully</span>
+<span class="sd">            connected layers and the activation functions, specifically using LeakyReLU for hidden</span>
+<span class="sd">            layers and Sigmoid for the output layer.</span>
+
+<span class="sd">        forward(x, labels):</span>
+<span class="sd">            Performs a forward pass of the discriminator. It takes an input batch of images `x`</span>
+<span class="sd">            and their corresponding labels, processes the images and labels through the network,</span>
+<span class="sd">            and outputs a batch of probabilities indicating how likely each image is to be real.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        - The model expects inputs x to be of the shape (N, 784) where N is the batch size.</span>
+<span class="sd">        - Labels should be of shape (N,) and contain integers representing class labels.</span>
+<span class="sd">        - The output is of shape (N, 1), representing the likelihood of each image being real.</span>
+<span class="sd">        - The network architecture is designed to work with flattened images of size 28x28 pixels.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_labels</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span> <span class="o">=</span> <span class="n">num_labels</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Discriminator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers_config</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="mi">784</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_labels</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">512</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+            <span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected_layer</span><span class="p">(</span><span class="n">layers_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layers_config</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">connected_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">layers</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">layers_config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span>
+                <span class="n">in_features</span><span class="p">,</span>
+                <span class="n">out_features</span><span class="p">,</span>
+                <span class="n">negative_slope</span><span class="p">,</span>
+                <span class="n">dropout</span><span class="p">,</span>
+            <span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">layers_config</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">layers</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_layer&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span>
+                    <span class="n">in_features</span><span class="o">=</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">out_features</span>
+                <span class="p">)</span>
+                <span class="n">layers</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_activation&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LeakyReLU</span><span class="p">(</span>
+                    <span class="n">negative_slope</span><span class="o">=</span><span class="n">negative_slope</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+                <span class="p">)</span>
+                <span class="n">layers</span><span class="p">[</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">_dropout&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="n">dropout</span><span class="p">)</span>
+
+            <span class="p">(</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="p">)</span> <span class="o">=</span> <span class="n">layers_config</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">layers</span><span class="p">[</span><span class="s2">&quot;output_layer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span>
+                <span class="n">in_features</span><span class="o">=</span><span class="n">in_features</span><span class="p">,</span> <span class="n">out_features</span><span class="o">=</span><span class="n">out_features</span>
+            <span class="p">)</span>
+            <span class="n">layers</span><span class="p">[</span><span class="s2">&quot;output_activation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">layers</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Layers config is not defined properly&quot;</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">labels</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Inputs are not defined properly&quot;</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">x</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="discriminator.total_params" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">total_params</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Calculates the total number of parameters in a given PyTorch model.</p>
+<p>The function iterates over all parameters in the model and sums their number of elements to get the total parameter count.</p>
+<h5 id="discriminator.total_params--parameters">Parameters:</h5>
+<ul>
+<li><code>model</code> (torch.nn.Module, optional): The model for which the total number of parameters is to be calculated.</li>
+</ul>
+<h5 id="discriminator.total_params--returns">Returns:</h5>
+<ul>
+<li><code>total_params</code> (int): The total number of parameters in the model.</li>
+</ul>
+<h5 id="discriminator.total_params--raises">Raises:</h5>
+<ul>
+<li>Exception: If the model is not defined properly (i.e., <code>model</code> is None).</li>
+</ul>
+
+          <details class="quote">
+            <summary>Source code in <code>discriminator.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">total_params</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculates the total number of parameters in a given PyTorch model.</span>
+
+<span class="sd">    The function iterates over all parameters in the model and sums their number of elements to get the total parameter count.</span>
+
+<span class="sd">    ### Parameters:</span>
+<span class="sd">    - `model` (torch.nn.Module, optional): The model for which the total number of parameters is to be calculated.</span>
+
+<span class="sd">    ### Returns:</span>
+<span class="sd">    - `total_params` (int): The total number of parameters in the model.</span>
+
+<span class="sd">    ### Raises:</span>
+<span class="sd">    - Exception: If the model is not defined properly (i.e., `model` is None).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">total_params</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+            <span class="n">total_params</span> <span class="o">+=</span> <span class="n">params</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Model is not defined properly&quot;</span><span class="o">.</span><span class="n">capitalize</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">total_params</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data_loader/" class="btn btn-neutral float-left" title="DataLoader"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../generator/" class="btn btn-neutral float-right" title="Generator">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data_loader/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../generator/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

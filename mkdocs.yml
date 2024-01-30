@@ -1,0 +1,14 @@
+site_name: Conditional GAN
+
+nav:
+  - home: index.md
+  - DataLoader: data_loader.md
+  - Discriminator: discriminator.md
+  - Generator: generator.md
+  - Trainer: trainer.md
+  - Test: test.md
+  - Command Line: cli.md
+
+theme: readthedocs
+plugins:
+  - mkdocstrings
