@@ -93,10 +93,10 @@ class Test:
             plt.title(kwargs["real_labels"][kwargs["labels"][index]])
             plt.axis("off")
         plt.tight_layout()
-        plt.show()
 
         try:
             plt.savefig("./outputs/synthetic_image.png")
+            plt.show()
         except Exception as e:
             raise Exception("No model found".capitalize())
 
