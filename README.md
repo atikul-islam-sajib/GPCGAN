@@ -28,6 +28,24 @@ cd GPCGAN
 pip install -r requirements.txt
 ```
 
+## Usage
+
+Explain how to use the software. Provide examples of commands and their explanations.
+
+```bash
+python /path/to/GPCGAN/src/cli.py --help
+```
+
+### Options
+
+- `--batch_size BATCH_SIZE`: Set the batch size for the dataloader. (Default: specify if there's one)
+- `--download_mnist`: Download the MNIST dataset.
+- `--epochs EPOCHS`: Set the number of training epochs.
+- `--latent_space LATENT_SPACE`: Define the size of the latent space for the model.
+- `--lr LR`: Specify the learning rate for training the model.
+- `--samples SAMPLES`: Determine the number of samples to generate after training.
+- `--test`: Run tests with synthetic data to validate model performance.
+
 ## Core Script Usage
 
 The core script sets up the necessary components for training the GAN. Here's a quick overview of what each part does:
